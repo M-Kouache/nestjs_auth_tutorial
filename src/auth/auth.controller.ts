@@ -1,4 +1,5 @@
-import { Controller, Post, Body,Request, UseGuards } from '@nestjs/common';
+import { Controller, Post, Body,Request, UseGuards, Get } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
 import { User } from '@prisma/client';
 import { UserService } from 'src/user/user.service';
 import { LocalGuard } from 'src/utils/guards/local-guard.guard';
@@ -25,5 +26,10 @@ export class AuthController {
         return this.authService.loginUser(req.user)
     }
 
+    @UseGuards(AuthGuard('google'))
+    @Get('/google/redirect')
+    async googleAuthRedirect(@Request() req){
+        return this.authService.loginGoogleUser(req.user.accessToken)
+    }
 
 }
